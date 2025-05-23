@@ -102,7 +102,12 @@ class DoctorHomeScreen extends StatelessWidget {
             children: [
               Text('Hi Handwerker!', style: AppTextStyles.subHeadding),
               SizedBox(height: 4.h),
-              Expanded(child: Text('Find Your Doctor', style: AppTextStyles.appBarHeadding2)),
+              // Expanded(
+              //   child: Text(
+              //     'Find Your Doctor',
+              //     style: AppTextStyles.appBarHeadding2,
+              //   ),
+              // ),
             ],
           ),
 
@@ -111,7 +116,7 @@ class DoctorHomeScreen extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => ModelProfileScreen()),
+                MaterialPageRoute(builder: (_) => DoctorProfileScreen()),
               );
             },
             borderRadius: BorderRadius.circular(50.r),
@@ -282,7 +287,7 @@ class DoctorHomeScreen extends StatelessWidget {
                 child: Image.asset(
                   image,
                   width: double.infinity,
-                  fit: BoxFit.fill,
+                  fit: BoxFit.cover,
                 ),
               ),
             ),

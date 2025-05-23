@@ -7,7 +7,7 @@ import 'package:neuroheal/presentation/patient_side/doctor_details_screen/view/d
 import 'package:neuroheal/presentation/patient_side/doctor_profile_screen/view/doctor_profile_screen.dart';
 import 'package:neuroheal/presentation/patient_side/favourite_doctor_screen/view/favourite_doctor_screen.dart';
 import 'package:neuroheal/presentation/patient_side/find_doctor_screen/view/find_doctor_screen.dart';
-import 'package:neuroheal/presentation/patient_side/home_screen_doctor/view/home_screen.dart';
+import 'package:neuroheal/presentation/patient_side/home_screen_patient/view/home_screen.dart';
 
 class BottomNavigationScreen extends StatefulWidget {
   @override
@@ -20,8 +20,8 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
   static final List<Widget> _widgetOptions = <Widget>[
     DoctorHomeScreen(),
     FindDoctorsScreen(),
-   BookingHistoryScreen(),
-    ModelProfileScreen(),
+    BookingHistoryScreen(),
+    DoctorProfileScreen(),
   ];
 
   void _onItemTapped(int index) {

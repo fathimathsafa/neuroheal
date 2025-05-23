@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:neuroheal/core/common/widget/custom_header.dart';
 import 'package:neuroheal/core/common/widget/screen_background.dart';
+import 'package:neuroheal/core/constants/app_colors.dart';
 import 'package:neuroheal/presentation/doctor_side/add_record_screen/view/add_record_screen.dart';
-
 
 class MedicalRecordsScreen extends StatelessWidget {
   const MedicalRecordsScreen({Key? key}) : super(key: key);
@@ -15,49 +17,70 @@ class MedicalRecordsScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: CustomHeader(title: "Medical Records"),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.arrow_back_ios_new, size: 20.sp),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    SizedBox(width: 24.w),
+                    Flexible(
+                      child: Text(
+                        'All Records',
+                        style: GoogleFonts.poppins(
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              const SizedBox(height: 60),
+              SizedBox(height: 60.h),
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CircleAvatar(
-                      radius: 60,
-                      backgroundColor: Colors.teal.shade50,
-                      child: Image.asset(
-                        'assets/medicinekit.png',
-                        width: 60,
-                        height: 60,
+                      radius: 60.r,
+                      backgroundImage: AssetImage(
+                        "assets/live_chat/live_chat.jpg",
                       ),
+                      //  Image.asset(
+                      //   'assets/live_chat/live_chat.jpg',
+
+                      // ),
                     ),
-                    const SizedBox(height: 30),
-                    const Text(
+                    SizedBox(height: 30.h),
+                    Text(
                       "Add a medical record.",
-                      style: TextStyle(
-                        fontSize: 18,
+                      style: GoogleFonts.poppins(
+                        fontSize: 18.sp,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    SizedBox(height: 10.h),
                     Text(
                       "A detailed health history helps a doctor diagnose\nyou better.",
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.grey[600]),
+                      style: GoogleFonts.poppins(
+                        color: Colors.grey[600],
+                        fontSize: 14.sp,
+                      ),
                     ),
-                    const SizedBox(height: 60),
+                    SizedBox(height: 60.h),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                      padding: EdgeInsets.symmetric(horizontal: 24.w),
                       child: SizedBox(
                         width: double.infinity,
-                        height: 50,
+                        height: 50.h,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.teal,
+                            backgroundColor: AppColors.primaryColor,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(8.r),
                             ),
                           ),
                           onPressed: () {
@@ -68,14 +91,16 @@ class MedicalRecordsScreen extends StatelessWidget {
                               ),
                             );
                           },
-                          child: const Text(
+                          child: Text(
                             "Add a record",
-                            style: TextStyle(color: Colors.white, fontSize: 16),
+                            style: GoogleFonts.poppins(
+                              color: Colors.white,
+                              fontSize: 16.sp,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 40),
                   ],
                 ),
               ),
