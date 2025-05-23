@@ -109,7 +109,7 @@ resizeToAvoidBottomInset: false,
                               ),
                               SizedBox(height: 4.h),
                               Text(
-                                'Specialist Cardiologist',
+                                'consultance psychologist',
                                 style: GoogleFonts.poppins(
                                   fontSize: 14.sp,
                                   color: Colors.grey[600],

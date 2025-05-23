@@ -6,7 +6,7 @@ class DoctorProvider extends ChangeNotifier {
   final List<Map<String, dynamic>> _allDoctors = [
     {
       'name': 'Dr. Shruti Kedia',
-      'specialty': 'Tooths Dentist',
+      'specialty': 'Counsiling psychologist',
       'experience': '7 Years',
       'rating': '97%',
       'stories': '69 Patient Stories',
@@ -14,7 +14,7 @@ class DoctorProvider extends ChangeNotifier {
     },
     {
       'name': 'Dr. Watamaniuk',
-      'specialty': 'Tooths Dentist',
+      'specialty': 'child psychologist',
       'experience': '9 Years',
       'rating': '74%',
       'stories': '78 Patient Stories',
@@ -22,7 +22,7 @@ class DoctorProvider extends ChangeNotifier {
     },
     {
       'name': 'Dr. Crownover',
-      'specialty': 'Tooths Dentist',
+      'specialty': 'Counsiling psychologist',
       'experience': '5 Years',
       'rating': '59%',
       'stories': '86 Patient Stories',
@@ -30,7 +30,7 @@ class DoctorProvider extends ChangeNotifier {
     },
     {
       'name': 'Dr. Balestra',
-      'specialty': 'Tooths Dentist',
+      'specialty': 'child psychologist',
       'experience': '6 Years',
       'rating': '',
       'stories': '',
@@ -38,7 +38,7 @@ class DoctorProvider extends ChangeNotifier {
     },
     {
       'name': 'Dr. Alina Roy',
-      'specialty': 'Orthodontist',
+      'specialty': 'clinical psychologist',
       'experience': '10 Years',
       'rating': '88%',
       'stories': '120 Patient Stories',
@@ -46,7 +46,7 @@ class DoctorProvider extends ChangeNotifier {
     },
     {
       'name': 'Dr. Brian Thomas',
-      'specialty': 'Pediatric Dentist',
+      'specialty': 'consultance psychologist',
       'experience': '8 Years',
       'rating': '92%',
       'stories': '95 Patient Stories',
@@ -54,7 +54,7 @@ class DoctorProvider extends ChangeNotifier {
     },
     {
       'name': 'Dr. Cynthia Evans',
-      'specialty': 'Cosmetic Dentist',
+      'specialty': 'clinical psychologist',
       'experience': '11 Years',
       'rating': '90%',
       'stories': '102 Patient Stories',
@@ -62,7 +62,7 @@ class DoctorProvider extends ChangeNotifier {
     },
     {
       'name': 'Dr. Daniel Kim',
-      'specialty': 'Oral Surgeon',
+      'specialty': 'consultance psychologist',
       'experience': '7 Years',
       'rating': '85%',
       'stories': '87 Patient Stories',
@@ -70,7 +70,7 @@ class DoctorProvider extends ChangeNotifier {
     },
     {
       'name': 'Dr. Eva Green',
-      'specialty': 'Endodontist',
+      'specialty': 'consultance psychologist',
       'experience': '6 Years',
       'rating': '76%',
       'stories': '65 Patient Stories',
@@ -94,17 +94,25 @@ class DoctorProvider extends ChangeNotifier {
     if (query.isEmpty) {
       _filteredDoctors = [..._allDoctors];
     } else {
-      final matching = _allDoctors.where((doc) =>
-          doc['name'].toLowerCase().contains(query.toLowerCase())).toList();
+      final matching =
+          _allDoctors
+              .where(
+                (doc) =>
+                    doc['name'].toLowerCase().contains(query.toLowerCase()),
+              )
+              .toList();
 
       if (matching.isEmpty) {
         _filteredDoctors = [];
         _noMatchFound = true;
       } else {
-        final others = _allDoctors
-            .where((doc) =>
-                !doc['name'].toLowerCase().contains(query.toLowerCase()))
-            .toList();
+        final others =
+            _allDoctors
+                .where(
+                  (doc) =>
+                      !doc['name'].toLowerCase().contains(query.toLowerCase()),
+                )
+                .toList();
         _filteredDoctors = [...matching, ...others];
       }
     }

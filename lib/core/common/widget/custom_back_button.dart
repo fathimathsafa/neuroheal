@@ -7,10 +7,10 @@ class CustomBackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10.r), // Responsive corner radius
-      ),
+      // decoration: BoxDecoration(
+      //   color: Colors.white,
+      //   borderRadius: BorderRadius.circular(10.r), // Responsive corner radius
+      // ),
       child: Padding(
         padding: EdgeInsets.all(4.w), // Responsive padding
         child: IconButton(

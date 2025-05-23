@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:neuroheal/core/common/widget/custom_header.dart';
 import 'package:neuroheal/core/common/widget/screen_background.dart';
+import 'package:neuroheal/presentation/doctor_side/all_record_screen/view/all_record_screen.dart';
+import 'package:neuroheal/presentation/patient_side/doctor_details_screen/pateinet_record_details.dart';
 
 class PatientDetailsScreen extends StatelessWidget {
   final Map<String, dynamic> patient;
@@ -88,10 +90,17 @@ class PatientDetailsScreen extends StatelessWidget {
                               ),
                             ),
                             onPressed: () {
-                              Navigator.pop(context);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) =>
+                                          PatientRecordScreen(patient: patient),
+                                ),
+                              );
                             },
                             child: Text(
-                              "Back",
+                              "My records",
                               style: TextStyle(
                                 fontSize: 16.sp,
                                 color: Colors.white,

@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:neuroheal/firebase_options.dart';
+import 'package:neuroheal/presentation/auth_screens/controller/auth_controller.dart';
 import 'package:neuroheal/presentation/auth_screens/login_screen/view/login_screen.dart';
 import 'package:neuroheal/presentation/auth_screens/registration_screen/view/registration_screen.dart';
 import 'package:neuroheal/presentation/doctor_side/all_record_screen/view/all_record_screen.dart';
@@ -47,11 +48,15 @@ bool _isLoading = false;
           (context, child) => MultiProvider(
             providers: [
               ChangeNotifierProvider(create: (_) => DoctorProvider()),
+              ChangeNotifierProvider(create: (_) => AuthProvider()),
             ],
             child: MaterialApp(
               debugShowCheckedModeBanner: false,
+
               home: AppointmentScreen(
           ),
+
+          
             ),
           ),
     );

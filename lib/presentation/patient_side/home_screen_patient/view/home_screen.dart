@@ -23,19 +23,19 @@ class Doctor {
 final List<Doctor> doctors = [
   Doctor(
     name: "Dr. Alice",
-    specialty: "Cardiologist",
+    specialty: "Counsiling psychologist",
     image: "assets/live_chat/comment4.jpg",
     rating: 4,
   ),
   Doctor(
     name: "Dr. Bob",
-    specialty: "Dentist",
+    specialty: "child psychologiest",
     image: "assets/live_chat/comment4.jpg",
     rating: 5,
   ),
   Doctor(
     name: "Dr. Carol",
-    specialty: "Neurologist",
+    specialty: "clinical psychologiest",
     image: "assets/live_chat/comment4.jpg",
     rating: 3,
   ),
@@ -102,12 +102,20 @@ class DoctorHomeScreen extends StatelessWidget {
             children: [
               Text('Hi Handwerker!', style: AppTextStyles.subHeadding),
               SizedBox(height: 4.h),
+
               // Expanded(
               //   child: Text(
               //     'Find Your Doctor',
               //     style: AppTextStyles.appBarHeadding2,
               //   ),
               // ),
+
+              Expanded(
+                child: Text(
+                  'Find Your Doctor',
+                  style: AppTextStyles.appBarHeadding2,
+                ),
+              ),
             ],
           ),
 
