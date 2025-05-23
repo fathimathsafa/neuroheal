@@ -15,7 +15,7 @@ class MyPatientsScreen extends StatelessWidget {
       {
         'name': 'Shruti Kedia',
         'age': '25',
-        'gender': 'male',
+        'gender': 'Male',
         'rating': '97%',
         'stories': '69 Patient Stories',
         'time': '10:00 AM tomorrow',
@@ -25,7 +25,7 @@ class MyPatientsScreen extends StatelessWidget {
       {
         'name': 'Watamaniuk',
         'age': '20',
-        'gender': 'female',
+        'gender': 'Female',
         'rating': '74%',
         'stories': '78 Patient Stories',
         'time': '12:00 AM tomorrow',
@@ -35,7 +35,7 @@ class MyPatientsScreen extends StatelessWidget {
       {
         'name': 'Crownover',
         'age': '25',
-        'gender': 'male',
+        'gender': 'Male',
         'rating': '59%',
         'stories': '86 Patient Stories',
         'time': '11:00 AM tomorrow',
@@ -45,7 +45,7 @@ class MyPatientsScreen extends StatelessWidget {
       {
         'name': 'Balestra',
         'age': '35',
-        'gender': 'female',
+        'gender': 'Female',
         'rating': '',
         'stories': '',
         'time': '',
@@ -198,7 +198,7 @@ class MyPatientsScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 4.h),
                       Text(
-                        "gender: ${patient['gender']}",
+                        "Gender: ${patient['gender']}",
                         style: GoogleFonts.poppins(
                           fontSize: 14.sp,
                           color: Color(0xFF1ED19D),
@@ -207,21 +207,21 @@ class MyPatientsScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 4.h),
                       Text(
-                        "age: ${patient['age']}",
+                        "Age: ${patient['age']}",
                         style: GoogleFonts.poppins(
                           fontSize: 12.sp,
                           color: Colors.grey[600],
                         ),
                       ),
                       SizedBox(height: 8.h),
-                      if (patient['rating'].isNotEmpty)
-                        Row(
-                          children: [
-                            _buildRatingItem(patient['rating'], Colors.green),
-                            SizedBox(width: 12.w),
-                            _buildRatingItem(patient['stories'], Colors.green),
-                          ],
-                        ),
+                      // if (patient['rating'].isNotEmpty)
+                      //   Row(
+                      //     children: [
+                      //       _buildRatingItem(patient['rating'], Colors.green),
+                      //       SizedBox(width: 12.w),
+                      //       _buildRatingItem(patient['stories'], Colors.green),
+                      //     ],
+                      //   ),
                     ],
                   ),
                 ),

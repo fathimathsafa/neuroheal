@@ -13,18 +13,18 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-//  @override
-//   void initState() {
-//     super.initState();
-//     Future.delayed(const Duration(seconds: 3), () {
-//       Navigator.pushReplacement(
-//         context,
-//         MaterialPageRoute(
-//           builder: (context) =>  OnboardingScreen(), // Replace with your screen
-//         ),
-//       );
-//     });
-//   }
+  //  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(seconds: 3), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => OnboardingScreen(), // Replace with your screen
+        ),
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
