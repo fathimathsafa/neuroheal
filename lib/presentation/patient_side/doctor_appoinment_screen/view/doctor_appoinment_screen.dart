@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:neuroheal/core/constants/app_colors.dart';
 import 'package:neuroheal/core/common/widget/screen_background.dart';
 import 'package:neuroheal/presentation/patient_side/appoinment_calender_screen/view/appoinment_calender_screen.dart';
+import 'package:neuroheal/repository/appoinmnet_screen/service/appoinment_screen_service.dart';
 
 class AppointmentScreen extends StatefulWidget {
   const AppointmentScreen({Key? key}) : super(key: key);
@@ -13,13 +14,17 @@ class AppointmentScreen extends StatefulWidget {
 }
 
 class _AppointmentScreenState extends State<AppointmentScreen> {
-  int _selectedPatient = -1; // -1 means no selection
+  // int _selectedPatient = -1; // -1 means no selection
+final nameController = TextEditingController();
+final contactController = TextEditingController();
+final ageController = TextEditingController();
+final relationController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF0F8FF),
-
+resizeToAvoidBottomInset: false,
       body: GradientBackground(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,7 +53,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                 ],
               ),
             ),
-
+        
             Expanded(
               child: Container(
                 margin: EdgeInsets.symmetric(horizontal: 16.w),
@@ -78,7 +83,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                           ),
                         ),
                         SizedBox(width: 16.w),
-
+        
                         // Doctor info
                         Expanded(
                           child: Column(
@@ -143,9 +148,9 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                         ),
                       ],
                     ),
-
+        
                     SizedBox(height: 24.h),
-
+        
                     // Appointment For section
                     Text(
                       'Appointment For',
@@ -154,11 +159,12 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                         color: AppColors.textLightDark,
                       ),
                     ),
-
+        
                     SizedBox(height: 12.h),
-
+        
                     // Patient Name input
                     TextField(
+                      controller: nameController,
                       decoration: InputDecoration(
                         hintText: 'Patient Name',
                         hintStyle: TextStyle(
@@ -183,11 +189,12 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                         ),
                       ),
                     ),
-
+        
                     SizedBox(height: 16.h),
-
+        
                     // Contact Number input
                     TextField(
+                      controller:  contactController,
                       decoration: InputDecoration(
                         hintText: 'Contact Number',
                         hintStyle: TextStyle(
@@ -214,9 +221,10 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                       keyboardType: TextInputType.phone,
                     ),
                     SizedBox(height: 16.h),
-
+        
                     // Contact Number input
                     TextField(
+                      controller: ageController,
                       decoration: InputDecoration(
                         hintText: 'Age',
                         hintStyle: TextStyle(
@@ -243,9 +251,10 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                       keyboardType: TextInputType.phone,
                     ),
                     SizedBox(height: 16.h),
-
+        
                     // Contact Number input
                     TextField(
+                      controller: relationController,
                       decoration: InputDecoration(
                         hintText: 'Relation with Patient',
                         hintStyle: TextStyle(
@@ -271,23 +280,47 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                       ),
                       keyboardType: TextInputType.phone,
                     ),
-
+        
                     //   SizedBox(height: 24.h),
                     Spacer(),
-
+        
                     // Next button
                     SizedBox(
                       width: double.infinity,
                       height: 50.h,
                       child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AppointmentCalendarScreen(),
-                            ),
-                          );
-                        },
+                  onPressed: () async {
+  print('Next button pressed');
+  int parsedAge = int.tryParse(ageController.text.trim()) ?? 0;
+
+  String? docId = await saveInitialPatientDetails(
+    name: nameController.text.trim(),
+    contact: contactController.text.trim(),
+    age: parsedAge,
+    relation: relationController.text.trim(),
+  );
+
+  print('Document ID returned: $docId');
+
+  if (docId != null) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => AppointmentCalendarScreen(
+         name: nameController.text,
+      age: ageController.text,
+      contact: contactController.text,
+      relation: relationController.text,
+        ),
+      ),
+    );
+  } else {
+    print('Failed to save patient details');
+  }
+},
+
+        
+        
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF2ECC71),
                           shape: RoundedRectangleBorder(
@@ -308,7 +341,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                 ),
               ),
             ),
-
+        
             SizedBox(height: 16.h),
           ],
         ),

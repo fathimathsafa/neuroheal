@@ -29,11 +29,15 @@ import 'package:neuroheal/presentation/common_screens/splash_screen/view/splash_
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const MyApp());
+  runApp( MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+final nameController = TextEditingController();
+final contactController = TextEditingController();
+final ageController = TextEditingController();
+final relationController = TextEditingController();
+bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +50,8 @@ class MyApp extends StatelessWidget {
             ],
             child: MaterialApp(
               debugShowCheckedModeBanner: false,
-              home: LoginScreen  (),
+              home: AppointmentScreen(
+          ),
             ),
           ),
     );

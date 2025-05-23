@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:neuroheal/core/constants/app_colors.dart';
 import 'package:neuroheal/core/common/widget/screen_background.dart';
+import 'package:neuroheal/presentation/patient_side/appoinment_calender_screen/view/appoinment_calender_screen.dart';
 import 'package:neuroheal/presentation/patient_side/doctor_appoinment_screen/view/doctor_appoinment_screen.dart';
 
 class DoctorDetailsScreen extends StatefulWidget {
@@ -157,12 +158,12 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AppointmentScreen(),
-                      ),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => AppointmentDetailsScreen(docId: docId),
+                    //   ),
+                    // );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF2ECC71),

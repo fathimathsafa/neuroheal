@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:neuroheal/core/constants/app_colors.dart';
 import 'package:neuroheal/core/constants/app_text_styles.dart';
 import 'package:neuroheal/core/common/widget/screen_background.dart';
@@ -8,7 +9,19 @@ import 'package:neuroheal/presentation/patient_side/bottom_navigation_screen/vie
 import 'package:table_calendar/table_calendar.dart';
 
 class AppointmentCalendarScreen extends StatefulWidget {
-  const AppointmentCalendarScreen({Key? key}) : super(key: key);
+  final String name;
+  final String age;
+  final String contact;
+  final String relation;
+
+  const AppointmentCalendarScreen({
+    Key? key,
+    required this.name,
+    required this.age,
+    required this.contact,
+    required this.relation,
+  }) : super(key: key);
+
 
   @override
   State<AppointmentCalendarScreen> createState() =>
@@ -16,12 +29,11 @@ class AppointmentCalendarScreen extends StatefulWidget {
 }
 
 class _AppointmentCalendarScreenState extends State<AppointmentCalendarScreen> {
-  // Selected date, time and reminder
   String? selectedReminder;
   String? selectedTime;
   DateTime? _selectedDay;
+  DateTime _focusedDay = DateTime.now();
 
-  DateTime selectedDate = DateTime(2021, 2, 17);
   final List<String> reminderTimes = ['25 min', '47 min', '1 hr'];
   final List<String> timeSlots = [
     '10:00 AM',
@@ -31,11 +43,122 @@ class _AppointmentCalendarScreenState extends State<AppointmentCalendarScreen> {
     '6:00 PM',
   ];
 
-  // Inside your state class
+  // You can store the docId here if you want to update later, null means new doc
+  String? appointmentDocId;
 
-  DateTime _focusedDay = DateTime.now();
+  @override
+  void initState() {
+    super.initState();
+    _selectedDay = DateTime.now();
+  }
+Future<void> saveNewAppointment() async {
+  if (_selectedDay == null || selectedTime == null || selectedReminder == null) {
+    return;
+  }
+  try {
+    // Create a new document reference with auto-generated ID
+    DocumentReference docRef = FirebaseFirestore.instance
+        .collection('appointment_details')
+        .doc(); // no argument means auto generate ID
+
+    // Use the docRef.id to store document ID inside the document data
+    await docRef.set({
+      'appointment_date': _selectedDay!.toIso8601String(),
+      'appointment_time': selectedTime,
+      'reminder': selectedReminder,
+      'created_at': FieldValue.serverTimestamp(),
+
+      // Patient details from widget
+      'name': widget.name,
+      'age': widget.age,
+      'contact': widget.contact,
+      'relation': widget.relation,
+
+      // Store the document ID inside the document
+      'appointment_id': docRef.id,
+    });
+
+    appointmentDocId = docRef.id;
+  } catch (e) {
+    print('Error saving new appointment: $e');
+  }
+}
+
+
+ Future<void> updateAppointmentDetails({
+  required String docId,
+  required DateTime selectedDate,
+  required String selectedTime,
+  required String selectedReminder,
+}) async {
+  try {
+    await FirebaseFirestore.instance
+        .collection('appointment_details')
+        .doc(docId)
+        .update({
+      'appointment_date': selectedDate.toIso8601String(),
+      'appointment_time': selectedTime,
+      'reminder': selectedReminder,
+      'updated_at': FieldValue.serverTimestamp(),
+      'name': widget.name,
+      'age': widget.age,
+      'contact': widget.contact,
+      'relation': widget.relation,
+    });
+  } catch (e) {
+    print('Error updating appointment details: $e');
+    rethrow;
+  }
+}
+
+  bool validateSelection() {
+    if (_selectedDay == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a date')),
+      );
+      return false;
+    }
+    if (selectedTime == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a time')),
+      );
+      return false;
+    }
+    if (selectedReminder == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a reminder time')),
+      );
+      return false;
+    }
+    return true;
+  }
+
+  void onConfirmPressed() async {
+    if (!validateSelection()) return;
+
+    if (appointmentDocId == null) {
+      // Save new appointment
+      await saveNewAppointment();
+    } else {
+      // Update existing appointment
+      await updateAppointmentDetails(
+        docId: appointmentDocId!,
+        selectedDate: _selectedDay!,
+        selectedTime: selectedTime!,
+        selectedReminder: selectedReminder!,
+      );
+    }
+
+    showAppointmentSuccessDialog(context);
+  }
 
   void showAppointmentSuccessDialog(BuildContext context) {
+    final appointmentDateStr = _selectedDay != null
+        ? "${_selectedDay!.day.toString().padLeft(2, '0')}/${_selectedDay!.month.toString().padLeft(2, '0')}/${_selectedDay!.year}"
+        : "";
+
+    final displayTime = selectedTime ?? "";
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -50,7 +173,6 @@ class _AppointmentCalendarScreenState extends State<AppointmentCalendarScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Circle with thumbs-up icon
                 Container(
                   width: 70.w,
                   height: 70.w,
@@ -65,8 +187,6 @@ class _AppointmentCalendarScreenState extends State<AppointmentCalendarScreen> {
                   ),
                 ),
                 SizedBox(height: 16.h),
-
-                // Title
                 Text(
                   "Thank you",
                   style: TextStyle(
@@ -75,18 +195,14 @@ class _AppointmentCalendarScreenState extends State<AppointmentCalendarScreen> {
                   ),
                 ),
                 SizedBox(height: 8.h),
-
-                // Subtext
                 Text(
                   "Your Appointment Successful.\n"
                   "You booked an appointment with Dr. Pediatrician Purpieson\n"
-                  "on February 21, at 02:00 PM.",
+                  "on $appointmentDateStr, at $displayTime.",
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 14.sp, color: Colors.black87),
                 ),
                 SizedBox(height: 24.h),
-
-                // Done button
                 SizedBox(
                   width: double.infinity,
                   height: 45.h,
@@ -98,7 +214,7 @@ class _AppointmentCalendarScreenState extends State<AppointmentCalendarScreen> {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                           builder: (context) => BottomNavigationScreen(),
@@ -116,11 +232,9 @@ class _AppointmentCalendarScreenState extends State<AppointmentCalendarScreen> {
                   ),
                 ),
                 SizedBox(height: 10.h),
-
-                // Edit appointment text
                 GestureDetector(
                   onTap: () {
-                    // Handle edit
+                    // Handle edit (if needed)
                   },
                   child: Text(
                     "Edit your appointment",
@@ -148,7 +262,8 @@ class _AppointmentCalendarScreenState extends State<AppointmentCalendarScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                padding:
+                    EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                 child: Row(
                   children: [
                     Flexible(
@@ -169,9 +284,9 @@ class _AppointmentCalendarScreenState extends State<AppointmentCalendarScreen> {
                   ],
                 ),
               ),
-
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+                padding:
+                    EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
@@ -197,8 +312,8 @@ class _AppointmentCalendarScreenState extends State<AppointmentCalendarScreen> {
                           lastDay: DateTime.utc(2030, 12, 31),
                           focusedDay: _focusedDay,
                           calendarFormat: CalendarFormat.month,
-                          selectedDayPredicate:
-                              (day) => isSameDay(_selectedDay, day),
+                          selectedDayPredicate: (day) =>
+                              isSameDay(_selectedDay, day),
                           onDaySelected: (selectedDay, focusedDay) {
                             setState(() {
                               _selectedDay = selectedDay;
@@ -215,251 +330,154 @@ class _AppointmentCalendarScreenState extends State<AppointmentCalendarScreen> {
                             ),
                             decoration: BoxDecoration(
                               color: const Color(0xFF00C853),
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(12.r),
+                                topRight: Radius.circular(12.r),
+                              ),
                             ),
                             leftChevronIcon: Icon(
                               Icons.chevron_left,
-                              size: 15.sp,
                               color: Colors.white,
                             ),
                             rightChevronIcon: Icon(
                               Icons.chevron_right,
-                              size: 15.sp,
                               color: Colors.white,
-                            ),
-                          ),
-                          daysOfWeekHeight: 30.sp,
-                          daysOfWeekStyle: DaysOfWeekStyle(
-                            weekdayStyle: TextStyle(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            weekendStyle: TextStyle(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w500,
                             ),
                           ),
                           calendarStyle: CalendarStyle(
-                            isTodayHighlighted: true,
+                            todayDecoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8.r),
+                            ),
+                            todayTextStyle: TextStyle(color: Colors.black),
                             selectedDecoration: BoxDecoration(
                               color: const Color(0xFF00C853),
-                              shape: BoxShape.circle,
+                              borderRadius: BorderRadius.circular(8.r),
                             ),
-                            selectedTextStyle: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            todayDecoration: BoxDecoration(
-                              color: Colors.green.shade200,
-                              shape: BoxShape.circle,
-                            ),
-                            defaultTextStyle: TextStyle(fontSize: 14.sp),
-                            weekendTextStyle: TextStyle(fontSize: 14.sp),
+                            selectedTextStyle: TextStyle(color: Colors.white),
                           ),
+                        ),
+                      ),
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Select Time',
+                              style: GoogleFonts.poppins(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            SizedBox(height: 12.h),
+                            Wrap(
+                              spacing: 10.w,
+                              runSpacing: 10.h,
+                              children: timeSlots.map((time) {
+                                final isSelected = time == selectedTime;
+                                return GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      selectedTime = time;
+                                    });
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 10.h, horizontal: 16.w),
+                                    decoration: BoxDecoration(
+                                      color: isSelected
+                                          ? const Color(0xFF00C853)
+                                          : Colors.grey.shade200,
+                                      borderRadius: BorderRadius.circular(20.r),
+                                    ),
+                                    child: Text(
+                                      time,
+                                      style: TextStyle(
+                                        color: isSelected
+                                            ? Colors.white
+                                            : Colors.black87,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                            SizedBox(height: 24.h),
+                            Text(
+                              'Select Reminder',
+                              style: GoogleFonts.poppins(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            SizedBox(height: 12.h),
+                            Wrap(
+                              spacing: 10.w,
+                              runSpacing: 10.h,
+                              children: reminderTimes.map((reminder) {
+                                final isSelected = reminder == selectedReminder;
+                                return GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      selectedReminder = reminder;
+                                    });
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 10.h, horizontal: 16.w),
+                                    decoration: BoxDecoration(
+                                      color: isSelected
+                                          ? const Color(0xFF00C853)
+                                          : Colors.grey.shade200,
+                                      borderRadius: BorderRadius.circular(20.r),
+                                    ),
+                                    child: Text(
+                                      reminder,
+                                      style: TextStyle(
+                                        color: isSelected
+                                            ? Colors.white
+                                            : Colors.black87,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                            SizedBox(height: 40.h),
+                            SizedBox(
+                              width: double.infinity,
+                              height: 48.h,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFF00C853),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12.r),
+                                  ),
+                                ),
+                                onPressed: onConfirmPressed,
+                                child: Text(
+                                  'Confirm Appointment',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 18.sp,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
                 ),
               ),
-              if (_selectedDay != null) ...[
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.all(16.w),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 10,
-                          spreadRadius: 2,
-                          offset: const Offset(0, 5),
-                        ),
-                      ],
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Available Time',
-                          style: AppTextStyles.smallHeadding,
-                        ),
-                        SizedBox(height: 12.h),
-                        Wrap(
-                          spacing: 10.w,
-                          runSpacing: 10.h,
-                          children:
-                              timeSlots.map((time) {
-                                final isSelected = time == selectedTime;
-                                return GestureDetector(
-                                  onTap:
-                                      () => setState(() => selectedTime = time),
-                                  child: Container(
-                                    width: 60.w,
-                                    height: 60.w,
-                                    decoration: BoxDecoration(
-                                      color:
-                                          isSelected
-                                              ? const Color(0xFF00C853)
-                                              : const Color.fromARGB(
-                                                255,
-                                                214,
-                                                234,
-                                                227,
-                                              ),
-                                      shape: BoxShape.circle,
-
-                                      boxShadow: [
-                                        if (isSelected)
-                                          BoxShadow(
-                                            color: const Color(
-                                              0xFF00C853,
-                                            ).withOpacity(0.3),
-                                            blurRadius: 8,
-                                            offset: const Offset(0, 4),
-                                          ),
-                                      ],
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          time.split(
-                                            ' ',
-                                          )[0], // Example: '10:00'
-                                          style: TextStyle(
-                                            color:
-                                                isSelected
-                                                    ? Colors.white
-                                                    : const Color(0xFF00C853),
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 12.sp,
-                                          ),
-                                        ),
-                                        Text(
-                                          time.split(' ').length > 1
-                                              ? time.split(' ')[1]
-                                              : '', // Example: 'AM'
-                                          style: TextStyle(
-                                            color:
-                                                isSelected
-                                                    ? Colors.white
-                                                    : const Color(0xFF00C853),
-                                            fontSize: 10.sp,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                        ),
-                        SizedBox(height: 24.h),
-                        Text(
-                          'Remind Me Before',
-                          style: AppTextStyles.smallHeadding,
-                        ),
-                        SizedBox(height: 12.h),
-                        Wrap(
-                          spacing: 10.w,
-                          runSpacing: 10.h,
-                          children:
-                              reminderTimes.map((time) {
-                                final isSelected = time == selectedReminder;
-                                return GestureDetector(
-                                  onTap:
-                                      () => setState(
-                                        () => selectedReminder = time,
-                                      ),
-                                  child: Container(
-                                    width: 60.w,
-                                    height: 60.w,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      color:
-                                          isSelected
-                                              ? const Color(0xFF00C853)
-                                              : const Color.fromARGB(
-                                                255,
-                                                214,
-                                                234,
-                                                227,
-                                              ),
-                                      shape: BoxShape.circle,
-
-                                      boxShadow: [
-                                        if (isSelected)
-                                          BoxShadow(
-                                            color: const Color(
-                                              0xFF00C853,
-                                            ).withOpacity(0.3),
-                                            blurRadius: 8,
-                                            offset: const Offset(0, 4),
-                                          ),
-                                      ],
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          time.split(' ')[0], // e.g., '25'
-                                          style: TextStyle(
-                                            color:
-                                                isSelected
-                                                    ? Colors.white
-                                                    : const Color(0xFF00C853),
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14.sp,
-                                          ),
-                                        ),
-                                        Text(
-                                          time.split(' ').length > 1
-                                              ? time.split(' ')[1]
-                                              : '', // e.g., 'min'
-                                          style: TextStyle(
-                                            color:
-                                                isSelected
-                                                    ? Colors.white
-                                                    : const Color(0xFF00C853),
-                                            fontSize: 10.sp,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                        ),
-                        SizedBox(height: 30.h),
-                        SizedBox(
-                          width: double.infinity,
-                          height: 48.h,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF00C853),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.r),
-                              ),
-                            ),
-                            onPressed: () {
-                              showAppointmentSuccessDialog(context);
-                            },
-                            child: Text(
-                              "Confirm",
-                              style: AppTextStyles.buttonText,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
             ],
           ),
         ),
