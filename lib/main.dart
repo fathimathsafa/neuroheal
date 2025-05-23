@@ -1,5 +1,7 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:neuroheal/firebase_options.dart';
 import 'package:neuroheal/presentation/auth_screens/login_screen/view/login_screen.dart';
 import 'package:neuroheal/presentation/auth_screens/registration_screen/view/registration_screen.dart';
 import 'package:neuroheal/presentation/doctor_side/all_record_screen/view/all_record_screen.dart';
@@ -22,7 +24,9 @@ import 'package:neuroheal/presentation/common_screens/on_boarding_screen/view/on
 import 'package:neuroheal/presentation/patient_side/popular_doctor_screen/view/popular_doctor_screen.dart';
 import 'package:neuroheal/presentation/common_screens/splash_screen/view/splash_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
