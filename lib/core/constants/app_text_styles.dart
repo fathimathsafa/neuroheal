@@ -16,6 +16,7 @@ class AppTextStyles {
     fontSize: 14.sp,
     color: AppColors.textLightDark,
     letterSpacing: 0.15.sp,
+    //'''''
   );
   static final TextStyle smallHeadding = GoogleFonts.poppins(
     fontSize: 13.sp,

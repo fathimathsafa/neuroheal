@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "637080344301",
+    "project_id": "neurohealapp",
+    "storage_bucket": "neurohealapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:637080344301:android:b23d5d2d2e1f200259dee4",
+        "android_client_info": {
+          "package_name": "com.example.neuroheal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "637080344301-jauvo87rvda02ifgq3nfem7sg7ft3i8b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrtEl1iD7GJFv4KcZzMQtSUiGqeO79eJU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "637080344301-jauvo87rvda02ifgq3nfem7sg7ft3i8b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "637080344301-e79c0ds5idbclbbl8mj7f1v55c6vt592.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.neurohealApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:637080344301:android:a78f46466259181a59dee4",
+        "android_client_info": {
+          "package_name": "com.example.neuroheal_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "637080344301-jauvo87rvda02ifgq3nfem7sg7ft3i8b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrtEl1iD7GJFv4KcZzMQtSUiGqeO79eJU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "637080344301-jauvo87rvda02ifgq3nfem7sg7ft3i8b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "637080344301-e79c0ds5idbclbbl8mj7f1v55c6vt592.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.neurohealApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

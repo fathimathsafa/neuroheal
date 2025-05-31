@@ -161,7 +161,7 @@ class FindDoctorsScreen extends StatelessWidget {
                       if (doctor['rating'].isNotEmpty)
                         Row(
                           children: [
-                            _buildRatingItem(doctor['rating'], Colors.green),
+                           // _buildRatingItem(doctor['rating'], Colors.green),
                             SizedBox(width: 12.w),
                             _buildRatingItem(doctor['stories'], Colors.green),
                           ],

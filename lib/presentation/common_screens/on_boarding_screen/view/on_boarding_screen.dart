@@ -46,21 +46,23 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 image: 'assets/onboarding/onboarding1.jpg',
                 title: "Find Trusted Doctors",
                 subtitle:
-                    "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of it over 2000 years old.",
+                    "Your mental well-being starts with the right support.",
+                // "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of it over 2000 years old.",
                 showButton: false,
               ),
               OnboardingSlide(
                 image: 'assets/onboarding/onboarding2.jpg',
                 title: "Choose Best Doctors",
                 subtitle:
-                    "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of it over 2000 years old.",
+                    'Connect with top-rated, verified psychologists for trusted mental health support.',
+                //"Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of it over 2000 years old.",
                 showButton: false,
               ),
               OnboardingSlide(
                 image: 'assets/onboarding/onboarding3.jpg',
                 title: "Easy Appointments",
-                subtitle:
-                    "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of it over 2000 years old.",
+                subtitle: 'Seamless booking. No waiting. Just care',
+                //  "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of it over 2000 years old.",
                 showButton: true,
                 onGetStarted: () {
                   Navigator.pushReplacementNamed(context, '/login');
